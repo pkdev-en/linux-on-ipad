@@ -1,6 +1,5 @@
 # LinuxOnPad
 
-An experimental Linux ARM64 emulator project for iPadOS, inspired by the architecture goals of Henge. This repository is only a starter scaffold: it does **not** boot Linux yet.
 
 ## Starter stack
 - SwiftUI iPadOS shell
