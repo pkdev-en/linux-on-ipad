@@ -10,7 +10,7 @@ for tool in aarch64-linux-gnu-as aarch64-linux-gnu-ld aarch64-linux-gnu-objcopy 
 done
 
 echo "== selftest"
-c++ -std=c++17 -O2 -o "$B/selftest" Engine/*.cpp tools/selftest_main.cpp
+c++ -std=c++17 -O2 -IEngine -o "$B/selftest" Engine/*.cpp Engine/*/*.cpp tools/selftest_main.cpp
 "$B/selftest"
 
 echo "== privileged system registers"

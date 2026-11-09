@@ -1,11 +1,14 @@
 # Host build of the engine (Mac or Linux). The iOS app is built by XcodeGen / Xcode, not by this file.
 CXX      ?= c++
-CXXFLAGS ?= -std=c++17 -O2 -Wall -Wextra
-ENGINE_ALL  := $(wildcard Engine/*.cpp)
+CXXFLAGS ?= -std=c++17 -O2 -Wall -Wextra -IEngine
+# Engine sources live in Engine/ and its layer subdirectories (CPU/, Memory/,
+# Bus/, Linux/) -- pick them all up recursively.
+ENGINE_ALL := $(shell find Engine -name '*.cpp')
+ENGINE_HDR := $(shell find Engine \( -name '*.h' -o -name '*.hpp' \))
 
 all: build/lopvm
 
-build/lopvm: $(ENGINE_ALL) $(wildcard Engine/*.h) tools/lopvm.cpp
+build/lopvm: $(ENGINE_ALL) $(ENGINE_HDR) tools/lopvm.cpp
 	@mkdir -p build
 	$(CXX) $(CXXFLAGS) -o $@ $(ENGINE_ALL) tools/lopvm.cpp
 

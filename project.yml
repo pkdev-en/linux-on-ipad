@@ -19,6 +19,7 @@ targets:
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1,2"
         GENERATE_INFOPLIST_FILE: "YES"
+        HEADER_SEARCH_PATHS: "$(SRCROOT)/Engine"
         CLANG_CXX_LANGUAGE_STANDARD: "c++17"
         CLANG_CXX_LIBRARY: "libc++"
         SWIFT_OBJC_BRIDGING_HEADER: "$(SRCROOT)/App/LinuxOnPad-Bridging-Header.h"
