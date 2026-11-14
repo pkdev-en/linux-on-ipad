@@ -1,0 +1,4 @@
+build/
+lxemu
+*.o
+*.a

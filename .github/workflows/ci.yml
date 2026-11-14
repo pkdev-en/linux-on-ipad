@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils-aarch64-linux-gnu device-tree-compiler qemu-system-arm python3
+
+      - name: Build and test
+        run: make check
+
+      - name: Compare against QEMU (independent reference)
+        run: sh tests/qemu_diff.sh
+
+      - name: Rebuild and test with ASan + UBSan
+        run: |
+          SAN="-O1 -g -std=c11 -Wall -Wextra -fsanitize=address,undefined -fno-sanitize-recover=undefined"
+          make clean
+          make CFLAGS="$SAN"
+          make check CFLAGS="$SAN"
+
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build for iOS and type-check the Swift front end
+        run: sh scripts/build-ios.sh
+
+      - name: Native build (Apple clang)
+        run: make
+
+      # Tests need an AArch64 assembler, which macOS does not ship. This step has not been
+      # run yet; if the Homebrew formula names differ it will fail here without hiding the
+      # iOS build above.
+      - name: Native tests
+        continue-on-error: true
+        run: |
+          brew install aarch64-elf-binutils dtc
+          make check CROSS=aarch64-elf
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: liblxemu-ios-arm64
+          path: build/ios/liblxemu.a
